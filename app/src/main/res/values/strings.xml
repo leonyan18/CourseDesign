@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Instagram?</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">首页</string>
+    <string name="friend">联系人</string>
+    <string name="me">我</string>
+    <string name="baseurl">192.168.0.115</string>
+    <string name="permission_request_denied">Permission request denied</string>
+    <string name="upload_success">上传成功</string>
+    <string name="error_gif">x or y bound size should be at least %1$dpx and file size should be no more than %2$sM</string>
+</resources>
