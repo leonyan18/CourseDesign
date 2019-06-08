@@ -40,7 +40,7 @@ dependencies {
     implementation  group: 'io.github.tonnyl', name: 'spark', version: '0.1.0-alpha'
     implementation 'com.qiniu:qiniu-android-sdk:7.3.15'
     implementation 'com.alibaba:fastjson:1.2.58'
-    implementation 'com.youth.banner:banner:1.4.10'
     implementation group: 'com.lzy.widget', name: 'ninegridview', version: '0.2.1'
+    implementation 'org.litepal.android:core:1.5.1'
 
 }

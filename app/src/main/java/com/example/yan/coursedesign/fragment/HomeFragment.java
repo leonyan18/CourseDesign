@@ -3,6 +3,7 @@ package com.example.yan.coursedesign.fragment;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,6 +34,7 @@ import com.example.yan.coursedesign.util.GifSizeFilter;
 import com.example.yan.coursedesign.util.Glide4Engine;
 import com.example.yan.coursedesign.util.MyApplication;
 import com.example.yan.coursedesign.util.MyImageloader;
+import com.example.yan.coursedesign.util.SoundUtils;
 import com.lzy.ninegrid.NineGridView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
@@ -55,12 +57,14 @@ public class HomeFragment extends Fragment {
     private MaterialRefreshLayout materialRefreshLayout;
     private TrendService trendService;
     private ListView homeList;
+    private MediaPlayer mediaPlayer;
     private static final String TAG = "HomeFragment";
     public static final int REQUEST_CODE_CHOOSE = 23;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mediaPlayer=new MediaPlayer();
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         trendService = ApiService.retrofit.create(TrendService.class);
         NineGridView.setImageLoader(new MyImageloader());
@@ -76,6 +80,8 @@ public class HomeFragment extends Fragment {
         trend.setImgContent(strings);
         trend.setName("yan");
         trends.add(trend);
+        trends.add(trend);
+        trends.add(trend);
         initData();
         trendAdapter = new TrendAdapter(getActivity(), R.layout.trend_item, trends);
         materialRefreshLayout = view.findViewById(R.id.refresh);
@@ -83,10 +89,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onRefresh(final MaterialRefreshLayout materialRefreshLayout) {
                 Toast.makeText(MyApplication.getContext(), "更新成功!", Toast.LENGTH_SHORT).show();
+                SoundUtils.playSound(MyApplication.getContext(),R.raw.bubble);
                 initData();
             }
         });
-        homeList.setAdapter(trendAdapter);
         camera.setOnClickListener(view1 -> {
             Toast.makeText(MyApplication.getContext(), "添加成功!", Toast.LENGTH_LONG).show();
             homeList.setAdapter(trendAdapter);
@@ -117,25 +123,9 @@ public class HomeFragment extends Fragment {
                                         .thumbnailScale(0.85f)
 //                                            .imageEngine(new GlideEngine())  // for glide-V3
                                         .imageEngine(new Glide4Engine())    // for glide-V4
-                                        .setOnSelectedListener(new OnSelectedListener() {
-                                            @Override
-                                            public void onSelected(
-                                                    @NonNull List<Uri> uriList, @NonNull List<String> pathList) {
-                                                // DO SOMETHING IMMEDIATELY HERE
-                                                Log.e("onSelected", "onSelected: pathList=" + pathList);
-
-                                            }
-                                        })
                                         .originalEnable(true)
                                         .maxOriginalSize(10)
                                         .autoHideToolbarOnSingleTap(true)
-                                        .setOnCheckedListener(new OnCheckedListener() {
-                                            @Override
-                                            public void onCheck(boolean isChecked) {
-                                                // DO SOMETHING IMMEDIATELY HERE
-                                                Log.e("isChecked", "onCheck: isChecked=" + isChecked);
-                                            }
-                                        })
                                         .forResult(REQUEST_CODE_CHOOSE);
                             } else {
                                 Toast.makeText(getActivity(), R.string.permission_request_denied, Toast.LENGTH_LONG)
@@ -168,6 +158,7 @@ public class HomeFragment extends Fragment {
                     trends.add(f);
                     Log.d(TAG, "onResponse: " + f);
                 }
+                homeList.setAdapter(trendAdapter);
                 materialRefreshLayout.finishRefresh();
             }
 

@@ -14,6 +14,8 @@ import com.example.yan.coursedesign.R;
 import com.example.yan.coursedesign.adapter.MsgAdapter;
 import com.example.yan.coursedesign.bean.Msg;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class ChatActivity extends AppCompatActivity {
     private EditText inputText;
 
     private Button send;
-
+    private int id;
     private RecyclerView msgRecyclerView;
 
     private MsgAdapter adapter;
@@ -38,6 +40,7 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent=getIntent();
         name=intent.getStringExtra("name");
         headPic=intent.getStringExtra("headPic");
+        id=intent.getIntExtra("id",1);
         initMsgs(); // 初始化消息数据
         backbtn=findViewById(R.id.backbtn);
         inputText =  findViewById(R.id.input_text);
@@ -58,6 +61,9 @@ public class ChatActivity extends AppCompatActivity {
             if (!"".equals(content)) {
                 resultIntent.putExtra("content",content);
                 Msg msg = new Msg(content, Msg.TYPE_SENT);
+                msg.setTo(id);
+                msg.setFrom(1);
+                msg.save();
                 msgList.add(msg);
                 adapter.notifyItemInserted(msgList.size() - 1); // 当有新消息时，刷新ListView中的显示
                 msgRecyclerView.scrollToPosition(msgList.size() - 1); // 将ListView定位到最后一行
@@ -67,9 +73,14 @@ public class ChatActivity extends AppCompatActivity {
         setResult(RESULT_OK,resultIntent);
     }
     private void initMsgs() {
-        Msg msg1 = new Msg("Hello guy.", Msg.TYPE_RECEIVED);
-        msgList.add(msg1);
-        Msg msg2 = new Msg("Hello. Who is that?", Msg.TYPE_SENT);
-        msgList.add(msg2);
+        List<Msg> msgs= DataSupport.where("from = ? or to = ?", String.valueOf(id),String.valueOf(id)).find(Msg.class);
+        for (Msg m:msgs) {
+            if(m.getFrom()==1){
+                m.setType(Msg.TYPE_SENT);
+            }else{
+                m.setType(Msg.TYPE_RECEIVED);
+            }
+        }
+        msgList=msgs;
     }
 }

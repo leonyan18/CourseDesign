@@ -23,16 +23,11 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
     private String headPic;
     private Context mcontext;
     static class ViewHolder extends RecyclerView.ViewHolder {
-
         LinearLayout leftLayout;
-
         LinearLayout rightLayout;
-
         TextView leftMsg;
-
         TextView rightMsg;
         CircleImageView headPic;
-
         public ViewHolder(View view) {
             super(view);
             leftLayout =  view.findViewById(R.id.left_layout);
@@ -60,12 +55,10 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
         Msg msg = mMsgList.get(position);
         Glide.with(mcontext).load(headPic).apply(GildeHelp.getOptions()).into( holder.headPic);
         if (msg.getType() == Msg.TYPE_RECEIVED) {
-            // 如果是收到的消息，则显示左边的消息布局，将右边的消息布局隐藏
             holder.leftLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);
             holder.leftMsg.setText(msg.getContent());
         } else if(msg.getType() == Msg.TYPE_SENT) {
-            // 如果是发出的消息，则显示右边的消息布局，将左边的消息布局隐藏
             holder.rightLayout.setVisibility(View.VISIBLE);
             holder.leftLayout.setVisibility(View.GONE);
             holder.rightMsg.setText(msg.getContent());

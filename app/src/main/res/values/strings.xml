@@ -8,5 +8,7 @@
     <string name="baseurl">192.168.0.115</string>
     <string name="permission_request_denied">Permission request denied</string>
     <string name="upload_success">上传成功</string>
+    <string name="add_success">添加成功</string>
     <string name="error_gif">x or y bound size should be at least %1$dpx and file size should be no more than %2$sM</string>
+    <string name="delete_success">刪除成功</string>
 </resources>

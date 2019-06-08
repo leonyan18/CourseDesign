@@ -5,11 +5,18 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.yan.coursedesign.R;
+import com.example.yan.coursedesign.fragment.FriendsFragment;
 import com.example.yan.coursedesign.fragment.HomeFragment;
+import com.example.yan.coursedesign.service.UserService;
 import com.example.yan.coursedesign.util.MyApplication;
 import com.example.yan.coursedesign.adapter.MyPagerAdapter;
 import com.example.yan.coursedesign.service.ApiService;
@@ -115,7 +122,26 @@ public class MainActivity extends AppCompatActivity {
                     t.printStackTrace();
                 }
             });
-            Log.e("OnActivityResult ", String.valueOf(Matisse.obtainPathResult(data)));
         }
     }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        Log.v(TAG, "populate context menu");
+        menu.add(0, 1, Menu.NONE, "删除");
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Log.v(TAG, "context item seleted ID="+ menuInfo.id);
+        switch (item.getItemId()){
+            case 1 :
+                FriendsFragment.deleteFriend(1, (int) menuInfo.id);
+                break;
+        }
+        return true;
+    }
+
 }
