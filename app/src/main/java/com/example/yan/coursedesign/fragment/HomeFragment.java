@@ -35,6 +35,7 @@ import com.example.yan.coursedesign.util.Glide4Engine;
 import com.example.yan.coursedesign.util.MyApplication;
 import com.example.yan.coursedesign.util.MyImageloader;
 import com.example.yan.coursedesign.util.SoundUtils;
+import com.example.yan.coursedesign.util.UserInfo;
 import com.lzy.ninegrid.NineGridView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.zhihu.matisse.Matisse;
@@ -52,36 +53,23 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
-    private List<Trend> trends;
+    private List<Trend> trends=new ArrayList<>();
     private TrendAdapter trendAdapter;
     private MaterialRefreshLayout materialRefreshLayout;
     private TrendService trendService;
     private ListView homeList;
-    private MediaPlayer mediaPlayer;
     private static final String TAG = "HomeFragment";
     public static final int REQUEST_CODE_CHOOSE = 23;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mediaPlayer=new MediaPlayer();
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         trendService = ApiService.retrofit.create(TrendService.class);
         NineGridView.setImageLoader(new MyImageloader());
         homeList = view.findViewById(R.id.homeList);
         ImageButton camera = view.findViewById(R.id.camera);
-        trends = new ArrayList<Trend>();
         ImageButton upload = view.findViewById(R.id.upload);
-        Trend trend = new Trend();
-        trend.setHeadPic("http://www.lancedai.cn/people3.jpg");
-        List<String> strings = new ArrayList<>();
-        strings.add("http://www.lancedai.cn/iu2.jpg");
-        strings.add("http://www.lancedai.cn/iu1.jpg");
-        trend.setImgContent(strings);
-        trend.setName("yan");
-        trends.add(trend);
-        trends.add(trend);
-        trends.add(trend);
         initData();
         trendAdapter = new TrendAdapter(getActivity(), R.layout.trend_item, trends);
         materialRefreshLayout = view.findViewById(R.id.refresh);
@@ -148,7 +136,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void initData() {
-        Call<Result<List<Trend>>> call = trendService.getTrends(1);
+        Call<Result<List<Trend>>> call = trendService.getTrends(UserInfo.userId);
         call.enqueue(new Callback<Result<List<Trend>>>() {
             @Override
             public void onResponse(Call<Result<List<Trend>>> call, Response<Result<List<Trend>>> response) {

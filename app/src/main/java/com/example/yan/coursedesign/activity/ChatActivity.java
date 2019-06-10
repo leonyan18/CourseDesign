@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.yan.coursedesign.R;
 import com.example.yan.coursedesign.adapter.MsgAdapter;
 import com.example.yan.coursedesign.bean.Msg;
+import com.example.yan.coursedesign.util.UserInfo;
 
 import org.litepal.crud.DataSupport;
 
@@ -40,7 +41,7 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent=getIntent();
         name=intent.getStringExtra("name");
         headPic=intent.getStringExtra("headPic");
-        id=intent.getIntExtra("id",1);
+        id=intent.getIntExtra("id",UserInfo.userId);
         initMsgs(); // 初始化消息数据
         backbtn=findViewById(R.id.backbtn);
         inputText =  findViewById(R.id.input_text);
@@ -62,7 +63,7 @@ public class ChatActivity extends AppCompatActivity {
                 resultIntent.putExtra("content",content);
                 Msg msg = new Msg(content, Msg.TYPE_SENT);
                 msg.setTo(id);
-                msg.setFrom(1);
+                msg.setFrom(UserInfo.userId);
                 msg.save();
                 msgList.add(msg);
                 adapter.notifyItemInserted(msgList.size() - 1); // 当有新消息时，刷新ListView中的显示
@@ -75,7 +76,7 @@ public class ChatActivity extends AppCompatActivity {
     private void initMsgs() {
         List<Msg> msgs= DataSupport.where("from = ? or to = ?", String.valueOf(id),String.valueOf(id)).find(Msg.class);
         for (Msg m:msgs) {
-            if(m.getFrom()==1){
+            if(m.getFrom()==UserInfo.userId){
                 m.setType(Msg.TYPE_SENT);
             }else{
                 m.setType(Msg.TYPE_RECEIVED);

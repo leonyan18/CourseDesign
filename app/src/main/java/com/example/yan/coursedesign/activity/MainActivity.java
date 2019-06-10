@@ -25,6 +25,7 @@ import com.example.yan.coursedesign.bean.Result;
 import com.example.yan.coursedesign.bean.Token;
 import com.example.yan.coursedesign.service.TrendService;
 import com.example.yan.coursedesign.util.QiniuUtil;
+import com.example.yan.coursedesign.util.UserInfo;
 import com.zhihu.matisse.Matisse;
 
 import java.io.File;
@@ -39,25 +40,11 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private List<ImageButton> btns;
-    public static Token token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ImgService imgService= ApiService.retrofit.create(ImgService.class);
-        Call<Result<Token>> call = imgService.getToken();
-        call.enqueue(new Callback<Result<Token>>() {
-            @Override
-            public void onResponse(Call<Result<Token>> call, Response<Result<Token>> response) {
-                token = response.body().getData();
-                Log.d(TAG, "onResponse: "+token);
-            }
-
-            @Override
-            public void onFailure(Call<Result<Token>> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+        QiniuUtil.initToken();
         btns=new ArrayList<>();
         final ViewPager viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
@@ -105,11 +92,11 @@ public class MainActivity extends AppCompatActivity {
                 pid=pid+"."+type;
                 Log.d(TAG, "onActivityResult: "+pid);
                 pids+=pid+",";
-                QiniuUtil.upload(file,pid,token.getAns());
+                QiniuUtil.uploadTrend(file,pid);
             }
             Log.d(TAG, "onActivityResult: "+pids);
             TrendService trendService= ApiService.retrofit.create(TrendService.class);
-            Call<Result<String>> call = trendService.uploadTrend(pids,1);
+            Call<Result<String>> call = trendService.uploadTrend(pids, UserInfo.userId);
             call.enqueue(new Callback<Result<String>>() {
                 @Override
                 public void onResponse(Call<Result<String>> call, Response<Result<String>> response) {
@@ -128,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         Log.v(TAG, "populate context menu");
-        menu.add(0, 1, Menu.NONE, "删除");
+        menu.add(0, 1, Menu.NONE, getString(R.string.delete));
     }
 
 
@@ -138,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, "context item seleted ID="+ menuInfo.id);
         switch (item.getItemId()){
             case 1 :
-                FriendsFragment.deleteFriend(1, (int) menuInfo.id);
+                FriendsFragment.deleteFriend(UserInfo.userId, (int) menuInfo.id);
                 break;
         }
         return true;

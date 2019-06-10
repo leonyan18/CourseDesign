@@ -10,14 +10,34 @@ import java.util.List;
  */
 
 public class Trend {
+    private int id;
     private String name;
     private String headPic;
     private List<String> imgContent;
 
-    public Trend(String name, String headPic, List<String> imgContent) {
+    public Trend(int id, String name, String headPic, List<String> imgContent) {
+        this.id = id;
         this.name = name;
         this.headPic = headPic;
         this.imgContent = imgContent;
+    }
+
+    @Override
+    public String toString() {
+        return "Trend{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", headPic='" + headPic + '\'' +
+                ", imgContent=" + imgContent +
+                '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Trend() {
@@ -47,12 +67,4 @@ public class Trend {
         this.imgContent = imgContent;
     }
 
-    @Override
-    public String toString() {
-        return "Trend{" +
-                "name='" + name + '\'' +
-                ", headPic='" + headPic + '\'' +
-                ", imgContent=" + imgContent +
-                '}';
-    }
 }

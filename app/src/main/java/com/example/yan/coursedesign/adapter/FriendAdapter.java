@@ -18,6 +18,7 @@ import com.example.yan.coursedesign.service.ApiService;
 import com.example.yan.coursedesign.service.UserService;
 import com.example.yan.coursedesign.util.GildeHelp;
 import com.example.yan.coursedesign.util.MyApplication;
+import com.example.yan.coursedesign.util.UserInfo;
 
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class FriendAdapter extends ArrayAdapter<Friend> {
         Glide.with(getContext()).load(friend.getImage()).apply(GildeHelp.getOptions()).into(imageView);
         slabel.setText(friend.getSlabel());
         if (resourceId == R.layout.people_item) {
-            viewHolder.add.setOnClickListener(view1 -> addFriend(friend.getId(), 1, friend));
+            viewHolder.add.setOnClickListener(view1 -> addFriend(friend.getId(), UserInfo.userId, friend));
         }
         return view;
     }

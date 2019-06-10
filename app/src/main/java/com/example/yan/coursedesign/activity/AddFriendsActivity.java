@@ -15,6 +15,7 @@ import com.example.yan.coursedesign.bean.Result;
 import com.example.yan.coursedesign.service.ApiService;
 import com.example.yan.coursedesign.service.UserService;
 import com.example.yan.coursedesign.util.MyApplication;
+import com.example.yan.coursedesign.util.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +55,7 @@ public class AddFriendsActivity extends AppCompatActivity {
         initData();
         listView.setOnItemClickListener((parent, view1, position, id) -> {
             Friend friend=friendList.get(position);
-            addFriend(friend.getId(),1);
+            addFriend(friend.getId(), UserInfo.userId);
         });
     }
     public void addFriend(int uid1,int uid2){
@@ -74,7 +75,7 @@ public class AddFriendsActivity extends AppCompatActivity {
     }
 
     public void initData(){
-        Call<Result<List<Friend>>> call = userService.getPeopleList(1);
+        Call<Result<List<Friend>>> call = userService.getPeopleList(UserInfo.userId);
         call.enqueue(new Callback<Result<List<Friend>>>() {
             @Override
             public void onResponse(Call<Result<List<Friend>>> call, Response<Result<List<Friend>>> response) {
@@ -95,7 +96,7 @@ public class AddFriendsActivity extends AppCompatActivity {
     }
 
     public void searchFriend(String keyword){
-        Call<Result<List<Friend>>> call = userService.searchPeopleList(1,keyword);
+        Call<Result<List<Friend>>> call = userService.searchPeopleList(UserInfo.userId,keyword);
         call.enqueue(new Callback<Result<List<Friend>>>() {
             @Override
             public void onResponse(Call<Result<List<Friend>>> call, Response<Result<List<Friend>>> response) {

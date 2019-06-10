@@ -22,6 +22,7 @@ import com.example.yan.coursedesign.bean.Friend;
 import com.example.yan.coursedesign.adapter.FriendAdapter;
 import com.example.yan.coursedesign.R;
 import com.example.yan.coursedesign.util.MyApplication;
+import com.example.yan.coursedesign.util.UserInfo;
 
 import org.litepal.tablemanager.Connector;
 
@@ -51,14 +52,14 @@ public class FriendsFragment extends Fragment {
         Connector.getDatabase();
         initData();
         Msg msg=new Msg();
-        msg.setFrom(1);
+        msg.setFrom(UserInfo.userId);
         msg.setTo(2);
         msg.setContent("database test");
         msg.setType(Msg.TYPE_SENT);
         msg.save();
         Msg msg1=new Msg();
         msg1.setFrom(2);
-        msg1.setTo(1);
+        msg1.setTo(UserInfo.userId);
         msg1.setContent("database test");
         msg1.setType(Msg.TYPE_RECEIVED);
         msg1.save();
@@ -103,7 +104,7 @@ public class FriendsFragment extends Fragment {
         }
     }
     public void initData(){
-        Call<Result<List<Friend>>> call = userService.getFriendList(1);
+        Call<Result<List<Friend>>> call = userService.getFriendList(UserInfo.userId);
         call.enqueue(new Callback<Result<List<Friend>>>() {
             @Override
             public void onResponse(Call<Result<List<Friend>>> call, Response<Result<List<Friend>>> response) {
